@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useState,useEffect} from "react";
+import TodoForm from "./Components/TodosForm";
+import Todos from "./Components/Todos";
+import {Container} from "reactstrap";
+import 'bootstrap/dist/css/bootstrap.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+import "./App.css";
+
+
+const App = ()=>{
+  const [todos,setTodos]=useState([])
+  useEffect(()=>{
+
+    const localtodos=localStorage.getItem("todos")
+    if(localtodos){
+      setTodos(JSON.parse(localtodos))
+    }
+  },[])
+  const addTodos=async todo=>{
+    setTodos([...todos,todo])
+  }
+  useEffect(()=>{
+    localStorage.setItem("todos",JSON.stringify(todos))
+  },[todos])
+
+  const removeTodos =id=>{
+    setTodos(todos.filter(todo=>todo.id!==id))
+  }
+
+  return(
+  <div>
+    <Container type="fluid">
+      <h1>Todo App With Local Sotorage:</h1>
+      <Todos todos={todos} removeTodos={removeTodos}/>
+    <TodoForm addTodos={addTodos}/>
+    </Container>
+  
+  
+  </div>
+  )
 }
 
+
+
+
+
 export default App;
+
+
